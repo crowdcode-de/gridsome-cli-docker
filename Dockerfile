@@ -1,16 +1,13 @@
-# simple vue-cli docker installation
-# docker build -t vue-cli
-# or specify vue-cli version
-# build --build-arg VUE_CLI_VERSION= .
+# simple gridsome-cli docker installation
+# docker build -t gridsome-cli
+# or specify gridsome-cli version
+# build --build-arg GRIDSOME_CLI_VERSION= .
 
-FROM node:latest
+FROM node:lts-slim
 
-# alternative to reduce size instead of alpine, but does not
-# include build tools for native compilation of npm packages
-# FROM node:8-slim
 
 LABEL maintainer="development@crowdcode.io" \
-      description="Simple vue-cli docker container"
+      description="Simple gridsome-cli docker container"
 
 ARG VUE_CLI_VERSION=4.3.1
 ARG GRIDSOME_CLI_VERSION=0.7.4
@@ -23,9 +20,18 @@ ARG WORKSPACE_DIR="/workspace"
 ENV NPM_CONFIG_LOGLEVEL info
 ENV HOME "$USER_HOME_DIR"
 
-RUN apt-get update \
-   && apt-get install -qqy --no-install-recommends dumb-init \
-   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get update && apt-get install -qqy --no-install-recommends \
+    ca-certificates \
+    dumb-init \
+    git \
+    build-essential \
+    python \
+    procps \
+    rsync \
+    curl \
+    zip \
+    openssh-client \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN set -xe \
     && mkdir -p $USER_HOME_DIR \
